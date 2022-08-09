@@ -1,11 +1,14 @@
-import logo from "./logo.svg";
-import "./App.css";
-
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import Navbar from "./components/layout/Navbar";
 function App() {
   return (
-    <div className="App">
-      <h1 class="text-3xl font-bold underline">Hello world!</h1>
-    </div>
+    <Router>
+      {/* take the full length of the screen vertically */}
+      <div className="flex flex-col justify-between h-screen">
+        <Navbar />
+        <main>Content</main>
+      </div>
+    </Router>
   );
 }
 
