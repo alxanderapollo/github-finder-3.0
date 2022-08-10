@@ -1,9 +1,10 @@
 import React from "react";
-
+import UserResults from "../users/UserResults";
 function Home() {
   return (
     <div>
-      <div className="h1 text-6xl">Welcome</div>
+      {/* SEarch component will go here */}
+      <UserResults />
     </div>
   );
 }
