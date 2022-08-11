@@ -1,5 +1,5 @@
-import { createContext } from "react";
-import { useState } from "react";
+import { createContext, useReducer } from "react";
+import githubReducer from "./GithubReducer";
 
 //create our context
 const GithubContext = createContext();
@@ -8,8 +8,13 @@ const GITHUB_URL = process.env.REACT_APP_GITHUB_URL;
 const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
 
 export const GithubProvider = ({ children }) => {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  //this will be our running state
+  const initialState = {
+    users: [],
+    loading: true,
+  };
+  //gives us a state, and dispatch
+  const [state, dispatch] = useReducer(githubReducer, initialState);
 
   const fetchUsers = async () => {
     // first argument is our request -> github url users, second is our token
@@ -18,17 +23,20 @@ export const GithubProvider = ({ children }) => {
         Authorization: `basic+ ${GITHUB_TOKEN}`,
       },
     });
-    //should return a response that will be our data
-
-    //2. store it on our users array
-    //3. set loading to false
+    //1.recover data from the api
     const data = await response.json();
-    setUsers(data);
-    setLoading(false);
+    //2. dispatch an action, pass on the data
+    dispatch({
+      type: "Get_USERS",
+      payload: data,
+    });
   };
 
   return (
-    <GithubContext.Provider value={{ users, loading, fetchUsers }}>
+    <GithubContext.Provider
+      //users will have 2 parts our data, and our loading flag
+      value={{ users: state.users, loading: state.loading, fetchUsers }}
+    >
       {children}
     </GithubContext.Provider>
   );
