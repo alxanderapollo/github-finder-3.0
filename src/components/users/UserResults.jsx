@@ -9,7 +9,7 @@ function UserResults() {
   const { users, loading, fetchUsers } = useContext(GithubContext);
   //bracket is our array of dependencies - will load this once everyime we run the app
   useEffect(() => {
-    fetchUsers(); //run the fetch users function
+    //fetchUsers(); //run the fetch users function
   }, []);
   //1. get data
   if (!loading) {
