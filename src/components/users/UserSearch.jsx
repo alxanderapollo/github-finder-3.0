@@ -2,14 +2,16 @@ import React from "react";
 import { useState, useContext } from "react";
 import GithubContext from "../../context/github/GithubContext";
 function UserSearch() {
+  //text that is placed into the form by the user
   const [text, setText] = useState("");
-  const { users } = useContext(GithubContext);
+  const { users, searchUsers, clearUsers } = useContext(GithubContext);
   const handleChange = (e) => setText(e.target.value);
   const handleSubmit = (e) => {
     e.preventDefault();
     if (text === "") {
       alert("Please enter something...");
     } else {
+      searchUsers(text);
       setText("");
     }
   };
@@ -40,7 +42,9 @@ function UserSearch() {
       {users.length > 0 && (
         <div>
           {" "}
-          <button className="btn btn-ghost btn-lg">clear</button>
+          <button onClick={() => clearUsers()} className="btn btn-ghost btn-lg">
+            clear
+          </button>
         </div>
       )}
     </div>
