@@ -11,6 +11,8 @@ export const GithubProvider = ({ children }) => {
   //this will be our running state
   const initialState = {
     users: [],
+    user: {},
+    repos: [],
     loading: false,
   };
   //gives us a state, and dispatch
@@ -41,6 +43,37 @@ export const GithubProvider = ({ children }) => {
     });
   };
 
+  //gets a single user
+  //takes in the login of the user
+  const getUser = async (login) => {
+    //set loading to true right before
+    //calling fetch users
+    setLoading();
+
+    // first argument is our request -> github url users, second is our token
+    const response = await fetch(`${GITHUB_URL}/users?${login}`, {
+      headers: {
+        Authorization: `basic+ ${GITHUB_TOKEN}`,
+      },
+    });
+
+    //in the case that we hit a 404 we want to display a 404
+    if (response.status === 404) {
+      window.location = "/notfound";
+    }
+    //otherwise  get the data
+    else {
+      //1.recover data from the api
+      const { data } = await response.json();
+      //2. dispatch an action, pass on the data
+      console.log(data);
+      dispatch({
+        type: "GET_USER",
+        payload: data,
+      });
+    }
+  };
+
   //clear users from state
   const clearUsers = () => dispatch({ type: "CLEAR_USERS" });
   //set loading function
@@ -51,9 +84,12 @@ export const GithubProvider = ({ children }) => {
       //users will have 2 parts our data, and our loading flag
       value={{
         users: state.users,
+        user: state.user,
+        repos: state.repos,
         loading: state.loading,
         searchUsers,
         clearUsers,
+        getUser,
       }}
     >
       {children}
