@@ -38,7 +38,7 @@ export const GithubProvider = ({ children }) => {
     const { items } = await response.json();
     //2. dispatch an action, pass on the data
     dispatch({
-      type: "Get_USERS",
+      type: "GET_USERS",
       payload: items,
     });
   };
@@ -73,6 +73,37 @@ export const GithubProvider = ({ children }) => {
     }
   };
 
+  //get user repos
+  //pass in usernme
+  const getUserRepos = async (login) => {
+    //set loading to true right before
+    //calling fetch users
+    setLoading();
+
+    //create object and pass text that is passed on by the user
+    const params = new URLSearchParams({
+      sort: "created",
+      per_page: 10,
+    });
+
+    // first argument is our request -> github url users, second is our token
+    const response = await fetch(
+      `${GITHUB_URL}/users/${login}/repos?${params}`,
+      {
+        headers: {
+          Authorization: `basic+ ${GITHUB_TOKEN}`,
+        },
+      }
+    );
+    //1.recover data from the api
+    const data = await response.json();
+    //2. dispatch an action, pass on the data
+    dispatch({
+      type: "GET_REPOS",
+      payload: data,
+    });
+  };
+
   //clear users from state
   const clearUsers = () => dispatch({ type: "CLEAR_USERS" });
   //set loading function
@@ -89,6 +120,7 @@ export const GithubProvider = ({ children }) => {
         searchUsers,
         clearUsers,
         getUser,
+        getUserRepos,
       }}
     >
       {children}
