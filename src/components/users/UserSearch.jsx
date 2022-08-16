@@ -2,18 +2,24 @@ import React from "react";
 import { useState, useContext } from "react";
 import GithubContext from "../../context/github/GithubContext";
 import AlertContext from "../../context/alert/AlertContext";
+import { searchUsers } from "../../context/github/GithubActions";
 function UserSearch() {
   //text that is placed into the form by the user
   const [text, setText] = useState("");
-  const { users, searchUsers, clearUsers } = useContext(GithubContext);
+  const { users, dispatch } = useContext(GithubContext);
   const { setAlert } = useContext(AlertContext);
   const handleChange = (e) => setText(e.target.value);
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (text === "") {
       setAlert("Please enter something...", "error");
     } else {
-      searchUsers(text);
+      //1. we are looking for users - set the spinner to load
+      dispatch({ type: "SET_LOADING" });
+      //2. get the user data and dispatch to our reducer
+      const users = await searchUsers(text);
+      dispatch({ type: "Get_USERS", payload: users });
+      //3. remove the pending text on the form
       setText("");
     }
   };
@@ -44,7 +50,10 @@ function UserSearch() {
       {users.length > 0 && (
         <div>
           {" "}
-          <button onClick={() => clearUsers()} className="btn btn-ghost btn-lg">
+          <button
+            onClick={() => dispatch({ type: "CLEAR_USERS" })}
+            className="btn btn-ghost btn-lg"
+          >
             clear
           </button>
         </div>
