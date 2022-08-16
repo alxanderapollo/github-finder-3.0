@@ -1,5 +1,5 @@
 import { createContext, useReducer } from "react";
-import githubReducer from "./GithubReducer";
+import githubReducer from "./githubReducer";
 
 //create our context
 const GithubContext = createContext();
@@ -49,9 +49,8 @@ export const GithubProvider = ({ children }) => {
     //set loading to true right before
     //calling fetch users
     setLoading();
-
     // first argument is our request -> github url users, second is our token
-    const response = await fetch(`${GITHUB_URL}/users?${login}`, {
+    const response = await fetch(`${GITHUB_URL}/users/${login}`, {
       headers: {
         Authorization: `basic+ ${GITHUB_TOKEN}`,
       },
@@ -64,9 +63,9 @@ export const GithubProvider = ({ children }) => {
     //otherwise  get the data
     else {
       //1.recover data from the api
-      const { data } = await response.json();
+      const data = await response.json();
       //2. dispatch an action, pass on the data
-      console.log(data);
+      console.log("what am i?", data);
       dispatch({
         type: "GET_USER",
         payload: data,
