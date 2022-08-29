@@ -36,10 +36,12 @@ function UserSearch() {
                 placeholder="Search"
                 value={text}
                 onChange={handleChange}
+                data-cy="input-search"
               />
               <button
                 type="submit"
                 className="absolute top-0 right-0 rounded-l-none w-36 btn btn-lg"
+                data-cy="SearchBtn"
               >
                 Go
               </button>
@@ -53,6 +55,7 @@ function UserSearch() {
           <button
             onClick={() => dispatch({ type: "CLEAR_USERS" })}
             className="btn btn-ghost btn-lg"
+            data-cy="clearUsersBtn"
           >
             clear
           </button>
